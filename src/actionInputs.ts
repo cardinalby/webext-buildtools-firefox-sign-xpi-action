@@ -1,0 +1,11 @@
+import { actionInputs as inputs } from 'github-actions-utils';
+
+export const actionInputs = {
+    zipFilePath: inputs.getWsPath('zipFilePath', true),
+    xpiFilePath: inputs.getWsPath('xpiFilePath', true),
+
+    jwtIssuer: inputs.getString('jwtIssuer', true, true),
+    jwtSecret: inputs.getString('jwtSecret', true, true),
+    channel: inputs.getString('channel', false),
+    timeoutMs: inputs.getInt('timeoutMs', true),
+}

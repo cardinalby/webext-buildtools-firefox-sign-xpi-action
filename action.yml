@@ -1,0 +1,31 @@
+name: 'webext-buildtools-firefox-sign-xpi-action'
+description: 'Create and sign Firefox xpi file for offline distribution of WebExtension'
+author: 'cardinalby'
+inputs:
+  zipFilePath:
+    description: 'Path to packed WebExtension directory (relative to the repo)'
+    required: true
+  xpiFilePath:
+    description: 'Path to save xpi file (relative to the repository)'
+    required: true
+  jwtIssuer:
+    description: 'JWT issuer also called "apiKey" obtained from created credentials'
+    required: true
+  jwtSecret:
+    description: 'JWT secret also called "apiSecret" obtained from created credentials'
+    required: true
+  channel:
+    description: 'The release channel (listed or unlisted). Ignored for new add-ons, which are always unlisted. Default: most recently used channel.'
+    required: false
+  timeoutMs:
+    description: 'Number of milliseconds to wait before aborting the request.'
+    required: false
+    default: '120000'
+outputs:
+  xpiFilePath:
+    description: 'Absolute path to result xpi file.'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+branding:
+  icon: 'package'
