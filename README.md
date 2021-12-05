@@ -10,7 +10,9 @@ package.
 ## Inputs
 
 * `zipFilePath` **Required**<br>
-Path to packed extension (relative to the repository)
+Path to packed extension (relative to the repository).
+You can use [webext-buildtools-pack-extension-dir-action](https://github.com/cardinalby/webext-buildtools-pack-extension-dir-action)
+to pack your extension directory and provide this input from it's output.
 
 * `xpiFilePath` **Required**<br>
 Path to save xpi file (relative to the repository).
@@ -33,7 +35,7 @@ Number of milliseconds to wait before aborting the request.
 * `xpiFilePath`<br>
 Absolute path to result xpi file.
 
-## Simple usage example
+## Usage example
 
 ```yaml
 uses: cardinalby/webext-buildtools-firefox-sign-xpi-action@v1
@@ -43,3 +45,7 @@ with:
   jwtIssuer: ${{ secrets.FF_JWT_ISSUER }}
   jwtSecret: ${{ secrets.FF_JWT_SECRET }}
 ```
+
+---
+If you are interested in the building the entire deployment workflow for WebExtension, 
+you can read this [article](https://dev.to/cardinalby/webextension-deployment-and-publishing-using-github-actions-522o).
