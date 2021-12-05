@@ -1,6 +1,6 @@
 {
   "name": "webext-buildtools-firefox-sign-xpi-action",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": false,
   "description": "Create and sign Firefox xpi file for offline distribution of WebExtension",
   "main": "lib/main.js",
