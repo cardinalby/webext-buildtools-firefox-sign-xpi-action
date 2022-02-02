@@ -9,7 +9,7 @@ async function run(): Promise<void> {
     try {
         await runImpl();
     } catch (error) {
-        ghActions.setFailed(error.message);
+        ghActions.setFailed(String(error));
     }
 }
 
@@ -37,6 +37,7 @@ function getBuilderOptions(): IFirefoxAddonsOptions {
             jwtIssuer: actionInputs.jwtIssuer
         },
         signXpi: {
+            extensionId: actionInputs.extensionId,
             xpiOutPath: actionInputs.xpiFilePath,
             signAddonLib: {
                 timeout: actionInputs.timeoutMs,

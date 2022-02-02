@@ -2,6 +2,9 @@ name: 'webext-buildtools-firefox-sign-xpi-action'
 description: 'Create and sign Firefox xpi file for offline distribution of WebExtension'
 author: 'cardinalby'
 inputs:
+  extensionId:
+    description: 'Id of extension uploaded to Firefox Addons especially for offline distribution'
+    required: false
   zipFilePath:
     description: 'Path to packed WebExtension directory (relative to the repo)'
     required: true

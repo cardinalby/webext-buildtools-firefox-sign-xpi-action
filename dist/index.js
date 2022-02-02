@@ -12,6 +12,7 @@ const github_actions_utils_1 = __nccwpck_require__(18267);
 exports.actionInputs = {
     zipFilePath: github_actions_utils_1.actionInputs.getWsPath('zipFilePath', true),
     xpiFilePath: github_actions_utils_1.actionInputs.getWsPath('xpiFilePath', true),
+    extensionId: github_actions_utils_1.actionInputs.getString('extensionId', false),
     jwtIssuer: github_actions_utils_1.actionInputs.getString('jwtIssuer', true, true),
     jwtSecret: github_actions_utils_1.actionInputs.getString('jwtSecret', true, true),
     channel: github_actions_utils_1.actionInputs.getString('channel', false),
@@ -80,7 +81,7 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
     __setModuleDefault(result, mod);
     return result;
 };
@@ -109,13 +110,13 @@ function run() {
             yield runImpl();
         }
         catch (error) {
-            ghActions.setFailed(error.message);
+            ghActions.setFailed(String(error));
         }
     });
 }
 function runImpl() {
     return __awaiter(this, void 0, void 0, function* () {
-        const logger = logger_1.getLogger();
+        const logger = (0, logger_1.getLogger)();
         const options = getBuilderOptions();
         const builder = new webext_buildtools_firefox_addons_builder_1.default(options, logger);
         builder.setInputBuffer(fs_1.default.readFileSync(actionInputs_1.actionInputs.zipFilePath));
@@ -135,6 +136,7 @@ function getBuilderOptions() {
             jwtIssuer: actionInputs_1.actionInputs.jwtIssuer
         },
         signXpi: {
+            extensionId: actionInputs_1.actionInputs.extensionId,
             xpiOutPath: actionInputs_1.actionInputs.xpiFilePath,
             signAddonLib: {
                 timeout: actionInputs_1.actionInputs.timeoutMs,
