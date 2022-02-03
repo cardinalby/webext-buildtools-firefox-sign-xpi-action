@@ -1,5 +1,8 @@
 import * as ghActions from '@actions/core';
-import FirefoxAddonsBuilder, {IFirefoxAddonsOptions} from 'webext-buildtools-firefox-addons-builder';
+import FirefoxAddonsBuilder, {
+    IFirefoxAddonsOptions,
+    SameVersionAlreadyUploadedError
+} from 'webext-buildtools-firefox-addons-builder';
 import {actionInputs} from './actionInputs';
 import {getLogger} from './logger';
 import fs from "fs";
@@ -9,6 +12,9 @@ async function run(): Promise<void> {
     try {
         await runImpl();
     } catch (error) {
+        if (error instanceof SameVersionAlreadyUploadedError) {
+            actionOutputs.sameVersionAlreadyUploadedError.setValue(true);
+        }
         ghActions.setFailed(String(error));
     }
 }

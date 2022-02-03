@@ -47,6 +47,9 @@ Number of milliseconds to wait before aborting the request.
 ### 🔻 `xpiFilePath`
 Absolute path to result xpi file.
 
+### 🔻 `sameVersionAlreadyUploadedError`
+`true` if the action failed because the version you try to sign already exists at server.
+
 ## Usage example
 
 ```yaml

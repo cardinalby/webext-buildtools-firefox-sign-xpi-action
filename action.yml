@@ -27,6 +27,8 @@ inputs:
 outputs:
   xpiFilePath:
     description: 'Absolute path to result xpi file.'
+  sameVersionAlreadyUploadedError:
+    description: '`true` if the action failed because the version you try to sign already exists at server'
 runs:
   using: 'node16'
   main: 'dist/index.js'
