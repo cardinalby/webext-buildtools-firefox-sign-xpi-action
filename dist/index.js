@@ -110638,6 +110638,32 @@ WError.prototype.cause = function we_cause(c)
 
 /***/ }),
 
+/***/ 82273:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Duration = void 0;
+class Duration {
+    constructor(startTick) {
+        this.startTick = startTick;
+    }
+    static startMeasuring() {
+        return new Duration(process.hrtime.bigint());
+    }
+    measure() {
+        return process.hrtime.bigint() - this.startTick;
+    }
+    measureMs() {
+        return Number(this.measure() / BigInt(1000000));
+    }
+}
+exports.Duration = Duration;
+//# sourceMappingURL=Duration.js.map
+
+/***/ }),
+
 /***/ 23807:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -110650,6 +110676,8 @@ const prepareJwt_1 = __nccwpck_require__(44562);
 const UnauthorizedError_1 = __nccwpck_require__(73543);
 const SameVersionAlreadyUploadedError_1 = __nccwpck_require__(45864);
 const ValidationError_1 = __nccwpck_require__(30675);
+const Duration_1 = __nccwpck_require__(82273);
+const PollTimedOutError_1 = __nccwpck_require__(749);
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -110663,7 +110691,8 @@ async function deployAddon(options) {
             '/versions/' +
             encodeURIComponent(options.version) + '/')
             .set('Authorization', `JWT ${token}`)
-            .field('upload', options.src)).body.pk;
+            .set('Content-Type', 'multipart/form-data')
+            .attach('upload', options.src, { filename: 'extension.zip', contentType: 'application/zip' })).body.pk;
     }
     catch (err) {
         switch (err.response.status) {
@@ -110675,10 +110704,17 @@ async function deployAddon(options) {
                 throw new Error('Submission failed: Status ' + err.response.status + ': ' + err.response.body.error);
         }
     }
+    const duration = Duration_1.Duration.startMeasuring();
     while (true) {
         let response;
+        const timeLeft = options.pollTimeoutMs
+            ? options.pollTimeoutMs - duration.measureMs()
+            : undefined;
+        if (timeLeft !== undefined && timeLeft <= 0) {
+            throw new PollTimedOutError_1.PollTimedOutError(uploadId, 'Polling timed out');
+        }
         try {
-            response = (await request
+            const req = request
                 .get('https://addons.mozilla.org/api/v5/addons/' +
                 encodeURIComponent(options.id) +
                 '/versions/' +
@@ -110686,7 +110722,11 @@ async function deployAddon(options) {
                 '/uploads/' +
                 encodeURIComponent(uploadId) +
                 '/')
-                .set('Authorization', `JWT ${token}`)).body;
+                .set('Authorization', `JWT ${token}`);
+            if (timeLeft !== undefined) {
+                req.timeout(timeLeft);
+            }
+            response = (await req).body;
         }
         catch (err) {
             if (err.response.status === 401) {
@@ -110694,11 +110734,11 @@ async function deployAddon(options) {
             }
             throw new Error('Polling failed: Status ' + err.response.status + ': ' + err.response.body.error);
         }
-        if (!response.valid) {
-            throw new ValidationError_1.ValidationError('Validation failed: ' + response.validation_url + ' ' +
-                JSON.stringify(response.validation_results));
-        }
         if (response.processed) {
+            if (!response.valid) {
+                throw new ValidationError_1.ValidationError('Validation failed: ' + response.validation_url + ' ' +
+                    JSON.stringify(response.validation_results));
+            }
             return response;
         }
         await sleep(15000);
@@ -110950,6 +110990,24 @@ class FirefoxAddonsBuilder extends webext_buildtools_utils_1.AbstractSimpleBuild
 exports.FirefoxAddonsBuilder = FirefoxAddonsBuilder;
 FirefoxAddonsBuilder.TARGET_NAME = 'firefox-addons-deploy';
 //# sourceMappingURL=builder.js.map
+
+/***/ }),
+
+/***/ 749:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.PollTimedOutError = void 0;
+class PollTimedOutError extends Error {
+    constructor(pk, message) {
+        super(message);
+        this.pk = pk;
+    }
+}
+exports.PollTimedOutError = PollTimedOutError;
+//# sourceMappingURL=PollTimedOutError.js.map
 
 /***/ }),
 
