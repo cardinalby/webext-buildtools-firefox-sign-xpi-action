@@ -110681,10 +110681,11 @@ const PollTimedOutError_1 = __nccwpck_require__(749);
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-async function deployAddon(options) {
+async function deployAddon(options, logger) {
     let uploadId;
     const token = prepareJwt_1.prepareJwt(options.issuer, options.secret);
     try {
+        logger.info(`Uploading version ${options.version}...`);
         uploadId = (await request
             .put('https://addons.mozilla.org/api/v5/addons/' +
             encodeURIComponent(options.id) +
@@ -110714,6 +110715,10 @@ async function deployAddon(options) {
             throw new PollTimedOutError_1.PollTimedOutError(uploadId, 'Polling timed out');
         }
         try {
+            const timeLeftLog = timeLeft !== undefined
+                ? ` (${Math.floor(timeLeft / 1000)} seconds)`
+                : '';
+            logger.info(`Polling status of ${uploadId} upload${timeLeftLog}...`);
             const req = request
                 .get('https://addons.mozilla.org/api/v5/addons/' +
                 encodeURIComponent(options.id) +
@@ -110729,12 +110734,16 @@ async function deployAddon(options) {
             response = (await req).body;
         }
         catch (err) {
+            if (err.timeout) {
+                throw new PollTimedOutError_1.PollTimedOutError(uploadId, 'Polling timed out');
+            }
             if (err.response.status === 401) {
                 throw new UnauthorizedError_1.UnauthorizedError('Polling failed: 401 Unauthorized: ' + err.response.body.detail);
             }
             throw new Error('Polling failed: Status ' + err.response.status + ': ' + err.response.body.error);
         }
         if (response.processed) {
+            logger.info('Item was processed. ', response);
             if (!response.valid) {
                 throw new ValidationError_1.ValidationError('Validation failed: ' + response.validation_url + ' ' +
                     JSON.stringify(response.validation_results));
@@ -110882,7 +110891,7 @@ class FirefoxAddonsBuilder extends webext_buildtools_utils_1.AbstractSimpleBuild
                 issuer: this._options.api.jwtIssuer,
                 secret: this._options.api.jwtSecret,
                 src: this._inputZipBuffer
-            });
+            }, this._logWrapper);
             result.getAssets().deployedExtStoreId = new buildResult_1.FirefoxAddonsExtIdAsset(manifest.version);
         }
         if (this.isSignedXpiRequired()) {
@@ -111083,6 +111092,8 @@ var ValidationError_1 = __nccwpck_require__(30675);
 Object.defineProperty(exports, "ValidationError", ({ enumerable: true, get: function () { return ValidationError_1.ValidationError; } }));
 var SameVersionAlreadyUploadedError_1 = __nccwpck_require__(45864);
 Object.defineProperty(exports, "SameVersionAlreadyUploadedError", ({ enumerable: true, get: function () { return SameVersionAlreadyUploadedError_1.SameVersionAlreadyUploadedError; } }));
+var PollTimedOutError_1 = __nccwpck_require__(749);
+Object.defineProperty(exports, "PollTimedOutError", ({ enumerable: true, get: function () { return PollTimedOutError_1.PollTimedOutError; } }));
 //# sourceMappingURL=index.js.map
 
 /***/ }),
