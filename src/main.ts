@@ -1,18 +1,17 @@
 import * as ghActions from '@actions/core';
 import FirefoxAddonsBuilder, {
     IFirefoxAddonsOptions,
-    SameVersionAlreadyUploadedError
+    VersionAlreadyExistsError
 } from 'webext-buildtools-firefox-addons-builder';
 import {actionInputs} from './actionInputs';
 import {getLogger} from './logger';
-import fs from "fs";
 import {actionOutputs} from "./actionOutputs";
 
 async function run(): Promise<void> {
     try {
         await runImpl();
     } catch (error) {
-        if (error instanceof SameVersionAlreadyUploadedError) {
+        if (error instanceof VersionAlreadyExistsError) {
             actionOutputs.sameVersionAlreadyUploadedError.setValue(true);
         }
         ghActions.setFailed(String(error));
@@ -25,7 +24,7 @@ async function runImpl() {
     const options = getBuilderOptions();
     const builder = new FirefoxAddonsBuilder(options, logger);
 
-    builder.setInputBuffer(fs.readFileSync(actionInputs.zipFilePath));
+    builder.setInputZipFilePath(actionInputs.zipFilePath);
     builder.requireSignedXpiFile();
 
     const result = await builder.build();
