@@ -25,6 +25,9 @@ async function runImpl() {
     const builder = new FirefoxAddonsBuilder(options, logger);
 
     builder.setInputZipFilePath(actionInputs.zipFilePath);
+    if (actionInputs.sourcesZipFilePath) {
+        builder.setInputSourcesZipFilePath(actionInputs.sourcesZipFilePath);
+    }
     builder.requireSignedXpiFile();
 
     const result = await builder.build();
