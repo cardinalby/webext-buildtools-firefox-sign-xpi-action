@@ -20,6 +20,13 @@ Path to packed extension (relative to the repository).
 You can use [webext-buildtools-pack-extension-dir-action](https://github.com/cardinalby/webext-buildtools-pack-extension-dir-action)
 to pack your extension directory and provide this input from it's output.
 
+### 🔸 `sourcesZipFilePath`
+Path to packed source code of the extension (relative to repository).
+Source code is required for addon review in case if your addon contains minified/unreadable code.
+
+You can use [webext-buildtools-pack-extension-dir-action](https://github.com/cardinalby/webext-buildtools-pack-extension-dir-action)
+to pack your extension directory and provide this input from it's output.
+
 ### 🔸 `xpiFilePath` _Required_
 
 Path to save xpi file (relative to the repository).
