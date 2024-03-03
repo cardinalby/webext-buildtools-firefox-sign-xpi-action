@@ -30,7 +30,7 @@ outputs:
   sameVersionAlreadyUploadedError:
     description: '`true` if the action failed because the version you try to sign already exists at server'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
 branding:
   icon: 'package'
