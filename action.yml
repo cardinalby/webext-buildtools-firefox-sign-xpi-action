@@ -8,6 +8,9 @@ inputs:
   zipFilePath:
     description: 'Path to packed WebExtension directory (relative to the repo)'
     required: true
+  sourcesZipFilePath:
+    description: 'Path to packed WebExtension source directory (relative to the repo)'
+    required: false
   xpiFilePath:
     description: 'Path to save xpi file (relative to the repository)'
     required: true
@@ -18,12 +21,16 @@ inputs:
     description: 'JWT secret also called "apiSecret" obtained from created credentials'
     required: true
   channel:
-    description: 'The release channel (listed or unlisted). Ignored for new add-ons, which are always unlisted. Default: most recently used channel.'
+    description: 'The release channel (listed or unlisted). Ignored for new add-ons, which are always unlisted'
     required: false
-  timeoutMs:
-    description: 'Number of milliseconds to wait before aborting the request.'
+  approvalTimeoutMs:
+    description: 'Number of milliseconds to wait for approval'
     required: false
-    default: '120000'
+    default: '300000'
+  validationTimeout:
+    description: 'Number of milliseconds to wait for validation'
+    required: false
+    default: '3600000'
 outputs:
   xpiFilePath:
     description: 'Absolute path to result xpi file.'

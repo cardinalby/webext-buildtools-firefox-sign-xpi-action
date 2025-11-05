@@ -24,6 +24,11 @@ to pack your extension directory and provide this input from it's output.
 
 Path to save xpi file (relative to the repository).
 
+### 🔹 `sourcesZipFilePath`
+
+Path to packed WebExtension source directory (relative to the repo) for review purposes. 
+It's required if your extension has minified/compiled.
+
 ### 🔹 `extensionId`
 
 UUID of an extension uploaded to Firefox Addons especially for offline distribution. 
@@ -33,14 +38,17 @@ If not specified, new extension will be added to your addons list every build (n
 ### 🔸 `jwtIssuer` _Required_
 JWT issuer also called "apiKey" obtained from created credentials. Use secrets!
 
-### 🔸  `jwtSecret` _Required_
+### 🔸 `jwtSecret` _Required_
 JWT secret also called "apiSecret" obtained from created credentials. Use secrets!
 
-### 🔹 `channel` _Default: most recently used channel_
+### 🔹 `channel` _Default: unlisted_
 The release channel (`listed` or `unlisted`). Ignored for new add-ons, which are always unlisted.
 
-### 🔹 `timeoutMs` _Default: `120000`_
-Number of milliseconds to wait before aborting the request.
+### 🔹 `approvalTimeoutMs` _Default: 300000 (5 minutes)_
+Timeout for waiting for add-on approval.
+
+### 🔹 `validationTimeout` _Default: 3600000 (1 hour)_
+Timeout for waiting for add-on validation.
 
 ## Outputs
 
@@ -56,6 +64,7 @@ Absolute path to result xpi file.
 uses: cardinalby/webext-buildtools-firefox-sign-xpi-action@v1
 with:
   zipFilePath: 'build/extension.zip'
+  
   xpiFilePath: 'build/extension.signed.xpi'
   jwtIssuer: ${{ secrets.FF_JWT_ISSUER }}
   jwtSecret: ${{ secrets.FF_JWT_SECRET }}

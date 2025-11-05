@@ -25,6 +25,9 @@ async function runImpl() {
     const builder = new FirefoxAddonsBuilder(options, logger);
 
     builder.setInputZipFilePath(actionInputs.zipFilePath);
+    if (actionInputs.sourcesZipFilePath) {
+        builder.setInputSourcesZipFilePath(actionInputs.sourcesZipFilePath);
+    }
     builder.requireSignedXpiFile();
 
     const result = await builder.build();
@@ -36,6 +39,10 @@ async function runImpl() {
 }
 
 function getBuilderOptions(): IFirefoxAddonsOptions {
+    if (actionInputs.channel != undefined && actionInputs.channel !== 'listed' && actionInputs.channel !== 'unlisted') {
+        throw new Error(`Invalid channel value: ${actionInputs.channel}. Allowed values are 'listed' or 'unlisted'.`);
+    }
+
     return {
         api: {
             jwtSecret: actionInputs.jwtSecret,
@@ -44,10 +51,9 @@ function getBuilderOptions(): IFirefoxAddonsOptions {
         signXpi: {
             extensionId: actionInputs.extensionId,
             xpiOutPath: actionInputs.xpiFilePath,
-            signAddonLib: {
-                timeout: actionInputs.timeoutMs,
-                channel: actionInputs.channel
-            }
+            channel: actionInputs.channel as 'listed' | 'unlisted',
+            approvalCheckTimeoutMs: actionInputs.approvalTimeoutMs,
+            validationCheckTimeoutMs: actionInputs.validationTimeoutMs
         }
     };
 }
