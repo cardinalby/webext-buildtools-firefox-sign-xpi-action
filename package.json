@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
-    "@vercel/ncc": "^0.38.1",
+    "@vercel/ncc": "^0.38.4",
     "typescript": "^5.3.3",
     "webext-buildtools-builder-types": "^1.0.11"
   }
