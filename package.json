@@ -7,7 +7,7 @@
     "build": "tsc",
     "pack": "ncc build",
     "all": "npm run build && npm run pack",
-    "mergePushMasterToV1": "git fetch . master:v1 && git push origin v1"
+    "mergePushMasterToV2": "git fetch . master:v2 && git push origin v2"
   },
   "repository": {
     "type": "git",

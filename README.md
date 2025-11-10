@@ -61,13 +61,13 @@ Absolute path to result xpi file.
 ## Usage example
 
 ```yaml
-uses: cardinalby/webext-buildtools-firefox-sign-xpi-action@v1
+uses: cardinalby/webext-buildtools-firefox-sign-xpi-action@v2
 with:
-  zipFilePath: 'build/extension.zip'
-  
-  xpiFilePath: 'build/extension.signed.xpi'
-  jwtIssuer: ${{ secrets.FF_JWT_ISSUER }}
-  jwtSecret: ${{ secrets.FF_JWT_SECRET }}
+    zipFilePath: 'build/extension.zip'
+    sourcesZipFilePath: 'build/extension-sources.zip'
+    xpiFilePath: 'build/extension.signed.xpi'
+    jwtIssuer: ${{ secrets.FF_JWT_ISSUER }}
+    jwtSecret: ${{ secrets.FF_JWT_SECRET }}
 ```
 
 ---
