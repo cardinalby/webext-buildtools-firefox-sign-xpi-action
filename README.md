@@ -47,7 +47,7 @@ The release channel (`listed` or `unlisted`). Ignored for new add-ons, which are
 ### 🔹 `approvalTimeoutMs` _Default: 300000 (5 minutes)_
 Timeout for waiting for add-on approval.
 
-### 🔹 `validationTimeout` _Default: 3600000 (1 hour)_
+### 🔹 `validationTimeoutMs` _Default: 3600000 (1 hour)_
 Timeout for waiting for add-on validation.
 
 ## Outputs

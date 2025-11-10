@@ -27,7 +27,7 @@ inputs:
     description: 'Number of milliseconds to wait for approval'
     required: false
     default: '300000'
-  validationTimeout:
+  validationTimeoutMs:
     description: 'Number of milliseconds to wait for validation'
     required: false
     default: '3600000'
